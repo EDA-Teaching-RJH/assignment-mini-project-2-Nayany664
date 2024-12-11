@@ -1,5 +1,5 @@
 
-from main import correct_format #get the class correct_format from the main file
+from contacts import correct_format #get the class correct_format from the main file
 
 class Testing() :
 
