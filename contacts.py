@@ -56,22 +56,22 @@ class correct_format: #class to check if e.g phone number has 11 digits or email
                 return
         raise ValueError("Contact not found.")
 
-    def find_contacts(self, keyword): #look for that contact
-        return [c for c in self.contacts if keyword.lower() in c.name.lower() or keyword in c.phone or keyword.lower() in c.email.lower()]
+    def find_contacts(info, keyword): #look for that contact
+        return [c for c in info.contacts if keyword.lower() in c.name.lower() or keyword in c.phone or keyword.lower() in c.email.lower()]
 
-    def list_contacts(self): # all contacts
-        return self.contacts
+    def list_contacts(info): # all contacts
+        return info.contacts
 
-    def save_contacts(self): #save contacts
-        with open(self.file_path, "w") as file: #w is write mode
-            json.dump([contact.__dict__ for contact in self.contacts], file)
+    def save_contacts(info): #save contacts
+        with open(info.file_path, "w") as file: #w is write mode
+            json.dump([contact.__dict__ for contact in info.contacts], file)
 
-    def load_contacts(self):
+    def load_contacts(info):
         try:
-            with open(self.file_path, "r") as file: #r is read mode
-                self.contacts = [correct_format(data) for data in json.load(file)]
+            with open(info.file_path, "r") as file: #r is read mode
+                info.contacts = [contact_details(**data) for data in json.load(file)] 
         except (FileNotFoundError, json.JSONDecodeError): #file not found or file not found in json
-            self.contacts = []
+            info.contacts = []
 
 
 #MAIN DEFINITION 
@@ -95,7 +95,7 @@ def main(): #main definition
             email = input("Enter email: ")
             address = input("Enter address: ")
             try:
-                format.add_contact(name, phone, email, address) #add to contacts in this order
+                format.add_contact_details(name, phone, email, address) #add to contacts in this order
                 print("Contact added successfully.")
             except ValueError as n:
                 print(n) #if error
@@ -107,14 +107,12 @@ def main(): #main definition
 
         elif choice == "3": #update contact
             name = input("Enter name of contact to update: ")
-            phone = input("Enter new phone (leave blank to skip): ")
-            email = input("Enter new email (leave blank to skip): ")
-            address = input("Enter new address (leave blank to skip): ")
-            try:
-                format.update_contact(name, phone or None, email or None, address or None) #None if for when left blank
-                print("Contact updated successfully.")
-            except ValueError as n:
-                print(n) #error
+            phone = input("Enter new phone (leave blank to skip): ").strip()
+            email = input("Enter new email (leave blank to skip): ").strip()
+            address = input("Enter new address (leave blank to skip): ").strip()
+            format.update_contact(name, phone if phone else None, email if email else None, address if address else None) #None if for when left blank
+            print("Contact updated successfully.")
+
 
         elif choice == "4": #find contact
             keyword = input("Enter search keyword: ")
