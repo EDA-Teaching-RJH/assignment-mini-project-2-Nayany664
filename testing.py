@@ -8,7 +8,6 @@ class Testing(unittest.TestCase):
     def isolation(info):
         info.format = correct_format(file_path="test_contacts.json")  #use a test file for isolation
 
-
     def testing_add_contact_details(info): #adding contact
         info.format.add_contact("John Doe", "01234567890", "john@example.com", "123 Street")
         info.assertEqual(len(info.format.contacts), 1) #1 contact is added
